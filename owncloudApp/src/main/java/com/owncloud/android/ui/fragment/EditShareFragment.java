@@ -1,23 +1,23 @@
 /**
- *   ownCloud Android client application
+ * ownCloud Android client application
  *
- *   @author masensio
- *   @author David A. Velasco
- *   @author Christian Schabesberger
- *   Copyright (C) 2019 ownCloud GmbH.
+ * @author masensio
+ * @author David A. Velasco
+ * @author Christian Schabesberger
+ * @author David González Verdugo
+ * Copyright (C) 2019 ownCloud GmbH.
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License version 2,
- *   as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.owncloud.android.ui.fragment;
@@ -39,7 +39,7 @@ import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.shares.OCShare;
+import com.owncloud.android.lib.resources.shares.RemoteShare;
 import com.owncloud.android.lib.resources.shares.ShareParserResult;
 import com.owncloud.android.lib.resources.shares.SharePermissionsBuilder;
 import com.owncloud.android.lib.resources.shares.ShareType;
@@ -65,7 +65,7 @@ public class EditShareFragment extends DialogFragment {
     };
 
     /** Share to show & edit, received as a parameter in construction time */
-    private OCShare mShare;
+    private RemoteShare mShare;
 
     /** File bound to mShare, received as a parameter in construction time */
     private OCFile mFile;
@@ -80,12 +80,12 @@ public class EditShareFragment extends DialogFragment {
     /**
      * Public factory method to create new EditShareFragment instances.
      *
-     * @param shareToEdit   An {@link OCShare} to show and edit in the fragment
+     * @param shareToEdit   An {@link RemoteShare} to show and edit in the fragment
      * @param sharedFile    The {@link OCFile} bound to 'shareToEdit'
      * @param account       The ownCloud account holding 'sharedFile'
      * @return A new instance of fragment EditShareFragment.
      */
-    public static EditShareFragment newInstance(OCShare shareToEdit, OCFile sharedFile, Account account) {
+    public static EditShareFragment newInstance(RemoteShare shareToEdit, OCFile sharedFile, Account account) {
         EditShareFragment fragment = new EditShareFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_SHARE, shareToEdit);
@@ -124,7 +124,6 @@ public class EditShareFragment extends DialogFragment {
     }
 
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -143,7 +142,7 @@ public class EditShareFragment extends DialogFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.edit_share_layout, container, false);
 
-        ((TextView)view.findViewById(R.id.editShareTitle)).setText(
+        ((TextView) view.findViewById(R.id.editShareTitle)).setText(
                 getResources().getString(R.string.share_with_edit_title, mShare.getSharedWithDisplayName()));
 
         // Setup layout
@@ -161,7 +160,7 @@ public class EditShareFragment extends DialogFragment {
 
 
     /**
-     * Updates the UI with the current permissions in the edited {@link OCShare}
+     * Updates the UI with the current permissions in the edited {@link RemoteShare}
      *
      * @param editShareView     Root view in the fragment.
      */
@@ -173,22 +172,22 @@ public class EditShareFragment extends DialogFragment {
             boolean isFederated = ShareType.FEDERATED.equals(mShare.getShareType());
             OwnCloudVersion serverVersion = AccountUtils.getServerVersion(mAccount);
             boolean isNotReshareableFederatedSupported = (
-                serverVersion != null &&
-                serverVersion.isNotReshareableFederatedSupported()
+                    serverVersion != null &&
+                            serverVersion.isNotReshareableFederatedSupported()
             );
             CompoundButton compound;
 
             compound = editShareView.findViewById(R.id.canShareSwitch);
-            if(isFederated && !isNotReshareableFederatedSupported) {
+            if (isFederated && !isNotReshareableFederatedSupported) {
                 compound.setVisibility(View.INVISIBLE);
             }
-            compound.setChecked((sharePermissions & OCShare.SHARE_PERMISSION_FLAG) > 0);
+            compound.setChecked((sharePermissions & RemoteShare.SHARE_PERMISSION_FLAG) > 0);
 
             compound = editShareView.findViewById(R.id.canEditSwitch);
             int anyUpdatePermission =
-                    OCShare.CREATE_PERMISSION_FLAG |
-                            OCShare.UPDATE_PERMISSION_FLAG |
-                            OCShare.DELETE_PERMISSION_FLAG;
+                    RemoteShare.CREATE_PERMISSION_FLAG |
+                            RemoteShare.UPDATE_PERMISSION_FLAG |
+                            RemoteShare.DELETE_PERMISSION_FLAG;
             boolean canEdit = (sharePermissions & anyUpdatePermission) > 0;
             compound.setChecked(canEdit);
 
@@ -198,15 +197,15 @@ public class EditShareFragment extends DialogFragment {
                 /// TODO change areEditOptionsAvailable in order to delete !isFederated
                 // from checking when iOS is ready
                 compound = editShareView.findViewById(R.id.canEditCreateCheckBox);
-                compound.setChecked((sharePermissions & OCShare.CREATE_PERMISSION_FLAG) > 0);
+                compound.setChecked((sharePermissions & RemoteShare.CREATE_PERMISSION_FLAG) > 0);
                 compound.setVisibility((canEdit) ? View.VISIBLE : View.GONE);
 
                 compound = editShareView.findViewById(R.id.canEditChangeCheckBox);
-                compound.setChecked((sharePermissions & OCShare.UPDATE_PERMISSION_FLAG) > 0);
+                compound.setChecked((sharePermissions & RemoteShare.UPDATE_PERMISSION_FLAG) > 0);
                 compound.setVisibility((canEdit) ? View.VISIBLE : View.GONE);
 
                 compound = editShareView.findViewById(R.id.canEditDeleteCheckBox);
-                compound.setChecked((sharePermissions & OCShare.DELETE_PERMISSION_FLAG) > 0);
+                compound.setChecked((sharePermissions & RemoteShare.DELETE_PERMISSION_FLAG) > 0);
                 compound.setVisibility((canEdit) ? View.VISIBLE : View.GONE);
             }
 
@@ -272,7 +271,7 @@ public class EditShareFragment extends DialogFragment {
             /// else, getView() cannot be NULL
 
             CompoundButton subordinate;
-            switch(compound.getId()) {
+            switch (compound.getId()) {
                 case R.id.canShareSwitch:
                     Log_OC.v(TAG, "canShareCheckBox toggled to " + isChecked);
                     updatePermissionsToShare();
@@ -286,8 +285,8 @@ public class EditShareFragment extends DialogFragment {
                         if (isChecked) {
                             OwnCloudVersion serverVersion = AccountUtils.getServerVersion(mAccount);
                             boolean isNotReshareableFederatedSupported = (
-                                serverVersion != null &&
-                                    serverVersion.isNotReshareableFederatedSupported()
+                                    serverVersion != null &&
+                                            serverVersion.isNotReshareableFederatedSupported()
                             );
                             if (!isFederated || isNotReshareableFederatedSupported) {
                                 /// not federated shares -> enable all the subpermisions
@@ -298,7 +297,7 @@ public class EditShareFragment extends DialogFragment {
                                         subordinate.setVisibility(View.VISIBLE);
                                     }
                                     if (!subordinate.isChecked() &&
-                                        !mFile.isSharedWithMe()) {          // see (1)
+                                            !mFile.isSharedWithMe()) {          // see (1)
                                         toggleDisablingListener(subordinate);
                                     }
                                 }
@@ -323,8 +322,8 @@ public class EditShareFragment extends DialogFragment {
                         }
                     }
 
-                    if(!(mFile.isFolder() && isChecked && mFile.isSharedWithMe())       // see (1)
-                        || isFederated ) {
+                    if (!(mFile.isFolder() && isChecked && mFile.isSharedWithMe())       // see (1)
+                            || isFederated) {
                         updatePermissionsToShare();
                     }
 
@@ -375,7 +374,7 @@ public class EditShareFragment extends DialogFragment {
                 }
             } else {
                 boolean allDisabled = true;
-                for (int i=0; allDisabled && i<sSubordinateCheckBoxIds.length; i++) {
+                for (int i = 0; allDisabled && i < sSubordinateCheckBoxIds.length; i++) {
                     allDisabled &=
                             sSubordinateCheckBoxIds[i] == subordinateCheckBoxView.getId() ||
                                     !((CheckBox) getView().findViewById(sSubordinateCheckBoxIds[i])).isChecked()
@@ -383,7 +382,7 @@ public class EditShareFragment extends DialogFragment {
                 }
                 if (canEditCompound.isChecked() && allDisabled) {
                     toggleDisablingListener(canEditCompound);
-                    for (int i=0; i<sSubordinateCheckBoxIds.length; i++) {
+                    for (int i = 0; i < sSubordinateCheckBoxIds.length; i++) {
                         getView().findViewById(sSubordinateCheckBoxIds[i]).setVisibility(View.GONE);
                     }
                 }
@@ -406,9 +405,9 @@ public class EditShareFragment extends DialogFragment {
 
 
     /**
-     * Updates the UI after the result of an update operation on the edited {@link OCShare} permissions.
+     * Updates the UI after the result of an update operation on the edited {@link RemoteShare} permissions.
      *
-     * @param result        Result of an update on the edited {@link OCShare} permissions.
+     * @param result        Result of an update on the edited {@link RemoteShare} permissions.
      */
     public void onUpdateSharePermissionsFinished(RemoteOperationResult<ShareParserResult> result) {
         if (result.isSuccess()) {
@@ -420,7 +419,7 @@ public class EditShareFragment extends DialogFragment {
 
 
     /**
-     * Get {@link OCShare} instance from DB and updates the UI.
+     * Get {@link RemoteShare} instance from DB and updates the UI.
      *
      * Depends on the parent Activity provides a {@link com.owncloud.android.datamodel.FileDataStorageManager}
      * instance ready to use. If not ready, does nothing.
@@ -433,7 +432,7 @@ public class EditShareFragment extends DialogFragment {
 
 
     /**
-     * Get {@link OCShare} instance from DB and updates the UI.
+     * Get {@link RemoteShare} instance from DB and updates the UI.
      *
      * Depends on the parent Activity provides a {@link com.owncloud.android.datamodel.FileDataStorageManager}
      * instance ready to use. If not ready, does nothing.
@@ -453,7 +452,7 @@ public class EditShareFragment extends DialogFragment {
 
 
     /**
-     * Updates the permissions of the {@link OCShare} according to the values set in the UI
+     * Updates the permissions of the {@link RemoteShare} according to the values set in the UI
      */
     private void updatePermissionsToShare() {
         SharePermissionsBuilder spb = new SharePermissionsBuilder();
@@ -468,7 +467,7 @@ public class EditShareFragment extends DialogFragment {
         int permissions = spb.build();
 
         ((FileActivity) getActivity()).getFileOperationsHelper().
-            setPermissionsToShareWithSharee(
+                setPermissionsToShareWithSharee(
                         mShare,
                         permissions
                 )

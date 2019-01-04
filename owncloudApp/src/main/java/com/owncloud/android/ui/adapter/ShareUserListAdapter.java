@@ -3,6 +3,7 @@
  *
  *   @author masensio
  *   @author Christian Schabesberger
+ *   @author David González Verdugo
  *   Copyright (C) 2019 ownCloud GmbH.
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -31,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.owncloud.android.R;
-import com.owncloud.android.lib.resources.shares.OCShare;
+import com.owncloud.android.lib.resources.shares.RemoteShare;
 import com.owncloud.android.lib.resources.shares.ShareType;
 
 import java.util.ArrayList;
@@ -42,10 +43,10 @@ import java.util.ArrayList;
 public class ShareUserListAdapter extends ArrayAdapter {
 
     private Context mContext;
-    private ArrayList<OCShare> mShares;
+    private ArrayList<RemoteShare> mShares;
     private ShareUserAdapterListener mListener;
 
-    public ShareUserListAdapter(Context context, int resource, ArrayList<OCShare>shares,
+    public ShareUserListAdapter(Context context, int resource, ArrayList<RemoteShare>shares,
                                 ShareUserAdapterListener listener) {
         super(context, resource);
         mContext= context;
@@ -75,7 +76,7 @@ public class ShareUserListAdapter extends ArrayAdapter {
         View view = inflator.inflate(R.layout.share_user_item, parent, false);
 
         if (mShares != null && mShares.size() > position) {
-            OCShare share = mShares.get(position);
+            RemoteShare share = mShares.get(position);
 
             TextView userName = view.findViewById(R.id.userOrGroupName);
             ImageView iconView = view.findViewById(R.id.icon);
@@ -111,7 +112,7 @@ public class ShareUserListAdapter extends ArrayAdapter {
     }
 
     public interface ShareUserAdapterListener {
-        void unshareButtonPressed(OCShare share);
-        void editShare(OCShare share);
+        void unshareButtonPressed(RemoteShare share);
+        void editShare(RemoteShare share);
     }
 }

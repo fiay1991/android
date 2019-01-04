@@ -2,7 +2,8 @@
  *   ownCloud Android client application
  *
  *   @author David A. Velasco
- *   Copyright (C) 2017 ownCloud GmbH.
+ *   @author David González Verdugo
+ *   Copyright (C) 2019 ownCloud GmbH.
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2,
@@ -31,7 +32,7 @@ import androidx.annotation.NonNull;
 
 import com.owncloud.android.R;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.shares.OCShare;
+import com.owncloud.android.lib.resources.shares.RemoteShare;
 import com.owncloud.android.ui.dialog.ConfirmationDialogFragment.ConfirmationDialogFragmentListener;
 import com.owncloud.android.ui.fragment.ShareFragmentListener;
 
@@ -41,17 +42,17 @@ implements ConfirmationDialogFragmentListener {
 
     private static final String TAG = RemoveShareDialogFragment.class.getName();
 
-    private OCShare mTargetShare;
+    private RemoteShare mTargetShare;
 
     private static final String ARG_TARGET_SHARE = "TARGET_SHARE";
 
     /**
      * Public factory method to create new RemoveFilesDialogFragment instances.
      * 
-     * @param share           {@link OCShare} to remove.
+     * @param share           {@link RemoteShare} to remove.
      * @return                Dialog ready to show.
      */
-    public static RemoveShareDialogFragment newInstance(OCShare share) {
+    public static RemoveShareDialogFragment newInstance(RemoteShare share) {
         RemoveShareDialogFragment frag = new RemoveShareDialogFragment();
         Bundle args = new Bundle();
 

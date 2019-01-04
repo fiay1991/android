@@ -4,6 +4,7 @@
  *   @author masensio
  *   @author David A. Velasco
  *   @author Christian Schabesberger
+ *   @author David González Verdugo
  *   Copyright (C) 2019 ownCloud GmbH.
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -39,7 +40,7 @@ import android.widget.ListView;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.shares.OCShare;
+import com.owncloud.android.lib.resources.shares.RemoteShare;
 import com.owncloud.android.ui.activity.FileActivity;
 import com.owncloud.android.ui.adapter.ShareUserListAdapter;
 
@@ -69,7 +70,7 @@ public class SearchShareesFragment extends Fragment implements ShareUserListAdap
     private Account mAccount;
 
     // other members
-    private ArrayList<OCShare> mShares;
+    private ArrayList<RemoteShare> mShares;
     private ShareUserListAdapter mUserGroupsAdapter = null;
     private ShareFragmentListener mListener;
 
@@ -243,13 +244,13 @@ public class SearchShareesFragment extends Fragment implements ShareUserListAdap
     }
 
     @Override
-    public void unshareButtonPressed(OCShare share) {
+    public void unshareButtonPressed(RemoteShare share) {
         Log_OC.d(TAG, "Removed private share with " + share.getSharedWithDisplayName());
         mListener.removeShare(share);
     }
 
     @Override
-    public void editShare(OCShare share) {
+    public void editShare(RemoteShare share) {
         // move to fragment to edit share
         Log_OC.d(TAG, "Editing " + share.getSharedWithDisplayName());
         mListener.showEditPrivateShare(share);
