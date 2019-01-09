@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.owncloud.android.R;
 import com.owncloud.android.lib.resources.shares.RemoteShare;
 import com.owncloud.android.lib.resources.shares.ShareType;
+import com.owncloud.android.shares.db.OCShare;
 
 import java.util.ArrayList;
 
@@ -43,10 +44,10 @@ import java.util.ArrayList;
 public class ShareUserListAdapter extends ArrayAdapter {
 
     private Context mContext;
-    private ArrayList<RemoteShare> mShares;
+    private ArrayList<OCShare> mShares;
     private ShareUserAdapterListener mListener;
 
-    public ShareUserListAdapter(Context context, int resource, ArrayList<RemoteShare>shares,
+    public ShareUserListAdapter(Context context, int resource, ArrayList<OCShare>shares,
                                 ShareUserAdapterListener listener) {
         super(context, resource);
         mContext= context;
@@ -76,13 +77,13 @@ public class ShareUserListAdapter extends ArrayAdapter {
         View view = inflator.inflate(R.layout.share_user_item, parent, false);
 
         if (mShares != null && mShares.size() > position) {
-            RemoteShare share = mShares.get(position);
+            OCShare share = mShares.get(position);
 
             TextView userName = view.findViewById(R.id.userOrGroupName);
             ImageView iconView = view.findViewById(R.id.icon);
             String name = share.getSharedWithDisplayName();
             Drawable icon = getContext().getResources().getDrawable(R.drawable.ic_user);
-            if (share.getShareType() == ShareType.GROUP) {
+            if (share.getShareType() == ShareType.GROUP.getValue()) {
                 name = getContext().getString(R.string.share_group_clarification, name);
                 icon = getContext().getResources().getDrawable(R.drawable.ic_group);
             }
@@ -112,7 +113,7 @@ public class ShareUserListAdapter extends ArrayAdapter {
     }
 
     public interface ShareUserAdapterListener {
-        void unshareButtonPressed(RemoteShare share);
-        void editShare(RemoteShare share);
+        void unshareButtonPressed(OCShare share);
+        void editShare(OCShare share);
     }
 }

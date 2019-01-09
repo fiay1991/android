@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import com.owncloud.android.R;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.shares.RemoteShare;
+import com.owncloud.android.shares.db.OCShare;
 import com.owncloud.android.ui.dialog.ConfirmationDialogFragment.ConfirmationDialogFragmentListener;
 import com.owncloud.android.ui.fragment.ShareFragmentListener;
 
@@ -49,10 +50,10 @@ implements ConfirmationDialogFragmentListener {
     /**
      * Public factory method to create new RemoveFilesDialogFragment instances.
      * 
-     * @param share           {@link RemoteShare} to remove.
+     * @param share           {@link OCShare} to remove.
      * @return                Dialog ready to show.
      */
-    public static RemoveShareDialogFragment newInstance(RemoteShare share) {
+    public static RemoveShareDialogFragment newInstance(OCShare share) {
         RemoveShareDialogFragment frag = new RemoveShareDialogFragment();
         Bundle args = new Bundle();
 
@@ -67,7 +68,8 @@ implements ConfirmationDialogFragmentListener {
         args.putInt(ARG_POSITIVE_BTN_RES, R.string.common_yes);
         args.putInt(ARG_NEUTRAL_BTN_RES, R.string.common_no);
         args.putInt(ARG_NEGATIVE_BTN_RES, -1);
-        args.putParcelable(ARG_TARGET_SHARE, share);
+        // TODO New Android Components
+//        args.putParcelable(ARG_TARGET_SHARE, share);
         frag.setArguments(args);
 
         return frag;
@@ -91,7 +93,8 @@ implements ConfirmationDialogFragmentListener {
     public void onConfirmation(String callerTag) {
         ShareFragmentListener listener = (ShareFragmentListener) getActivity();
         Log_OC.d(TAG, "Removing public share " + mTargetShare.getName());
-        listener.removeShare(mTargetShare);
+        // TODO New Android Components
+//        listener.removeShare(mTargetShare);
     }
     
     @Override

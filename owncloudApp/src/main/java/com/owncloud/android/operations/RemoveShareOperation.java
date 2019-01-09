@@ -31,6 +31,7 @@ import com.owncloud.android.lib.resources.shares.RemoveRemoteShareOperation;
 import com.owncloud.android.lib.resources.shares.ShareParserResult;
 import com.owncloud.android.lib.resources.shares.ShareType;
 import com.owncloud.android.operations.common.SyncOperation;
+import com.owncloud.android.shares.db.OCShare;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,7 @@ public class RemoveShareOperation extends SyncOperation {
         RemoteOperationResult result;
 
         // Get OCShare from local storage
-        RemoteShare share = getStorageManager().getShareById(mLocalId);
+        OCShare share = getStorageManager().getShareById(mLocalId);
 
         if (share != null) {
             // Delete remote share
@@ -66,11 +67,11 @@ public class RemoveShareOperation extends SyncOperation {
             if (result.isSuccess()) {
                 Log_OC.d(TAG, "Share id = " + share.getRemoteId() + " deleted");
 
-                ShareType shareType = share.getShareType();
+                ShareType shareType = ShareType.fromValue(share.getShareType());
                 if (ShareType.PUBLIC_LINK.equals(shareType)) {
 
                     // Check if it is the last public share
-                    ArrayList<RemoteShare> publicShares = getStorageManager().
+                    ArrayList<OCShare> publicShares = getStorageManager().
                             getPublicSharesForAFile(share.getPath(),
                                     getStorageManager().getAccount().name);
 
@@ -82,7 +83,7 @@ public class RemoveShareOperation extends SyncOperation {
                         || ShareType.FEDERATED.equals(shareType)) {
 
                     // Check if it is the last private share
-                    ArrayList<RemoteShare> sharesWith = getStorageManager().
+                    ArrayList<OCShare> sharesWith = getStorageManager().
                             getPrivateSharesForAFile(share.getPath(),
                                     getStorageManager().getAccount().name);
 
