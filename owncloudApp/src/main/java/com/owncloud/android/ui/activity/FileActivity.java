@@ -298,7 +298,7 @@ public class FileActivity extends DrawerActivity
 
             if (result.getCode() == ResultCode.UNAUTHORIZED) {
                 showSnackMessage(
-                        ErrorMessageAdapter.getResultMessage(result, operation, getResources())
+                        ErrorMessageAdapter.Companion.getResultMessage(result, operation, getResources())
                 );
             }
 
@@ -318,7 +318,7 @@ public class FileActivity extends DrawerActivity
 
             } else if (result.getCode() != ResultCode.CANCELLED) {
                 showSnackMessage(
-                        ErrorMessageAdapter.getResultMessage(result, operation, getResources())
+                        ErrorMessageAdapter.Companion.getResultMessage(result, operation, getResources())
                 );
             }
 
@@ -331,7 +331,7 @@ public class FileActivity extends DrawerActivity
 
             } else {
                 showSnackMessage(
-                        ErrorMessageAdapter.getResultMessage(result, operation, getResources())
+                        ErrorMessageAdapter.Companion.getResultMessage(result, operation, getResources())
                 );
             }
 

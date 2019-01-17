@@ -1028,7 +1028,7 @@ public class FileUploader extends Service
                     .setOngoing(false)
                     .setProgress(0, 0, false);
 
-            content = ErrorMessageAdapter.getResultMessage(
+            content = ErrorMessageAdapter.Companion.getResultMessage(
                     uploadResult, upload, getResources()
             );
 
