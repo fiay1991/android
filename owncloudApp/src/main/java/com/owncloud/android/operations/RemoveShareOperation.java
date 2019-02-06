@@ -59,7 +59,7 @@ public class RemoveShareOperation extends SyncOperation {
         if (share != null) {
             // Delete remote share
             RemoveRemoteShareOperation operation =
-                    new RemoveRemoteShareOperation((int) share.getRemoteId());
+                    new RemoveRemoteShareOperation(share.getRemoteId());
             result = operation.execute(client);
 
             // Update local storage
